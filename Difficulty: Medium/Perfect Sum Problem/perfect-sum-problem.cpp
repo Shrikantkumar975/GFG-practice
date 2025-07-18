@@ -5,7 +5,7 @@ class Solution {
         int mod = 1e9 + 7;
         
         vector<vector<int>> dp(n + 1, vector<int>(target + 1, 0));
-        
+        sort(arr.begin(),arr.end());
         // Base case: sum 0 can be formed by empty subset
         for (int i = 0; i <= n; i++) dp[i][0] = 1;
         
@@ -13,7 +13,7 @@ class Solution {
             for (int j = 0; j <= target; j++) {
                 if (arr[i - 1] <= j)
                     dp[i][j] = (dp[i - 1][j] + dp[i - 1][j - arr[i - 1]]) % mod;
-                else
+                else    
                     dp[i][j] = dp[i - 1][j];
             }
         }
