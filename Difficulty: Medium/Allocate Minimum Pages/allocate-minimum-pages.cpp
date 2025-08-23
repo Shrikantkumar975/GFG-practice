@@ -1,43 +1,53 @@
 class Solution {
   public:
-    int check(vector<int>&arr,int mid){
-        int count =1, stHave = 0;
+    bool check(vector<int> &arr, int k, int pageLimit) {
+    
+    // starting from the first student
+    int cnt = 1;
+    int pageSum = 0;
+    for(int i = 0; i < arr.size(); i++) {
         
-        for(int i=0;i<arr.size();i++){
-            if(stHave + arr[i] <= mid){
-                stHave+=arr[i];
-            }else{
-                count++;
-                stHave = arr[i];
-            }
+        // if adding the current book exceeds the page 
+        // limit, assign the book to the next student
+        if(pageSum + arr[i] > pageLimit) {
+            cnt++;
+            pageSum = arr[i];
         }
-        return count;
+        else {
+            pageSum += arr[i];
+        }
     }
     
-    int findPages(vector<int> &arr, int k) {
-        // code here
-        int mx = arr[0];
-        int sum =0;
+    // if books can assigned to less than k students then
+    // it can be assigned to exactly k students as well
+    return (cnt <= k);
+}
+
+int findPages(vector<int> &arr, int k) {
+    
+    // if number of students are more than total books
+    // then allocation is not possible
+    if(k > arr.size())
+        return -1;
         
-        if(arr.size()<k) return -1;
+    // search space for Binary Search
+    int lo = *max_element(arr.begin(), arr.end());
+    int hi = accumulate(arr.begin(), arr.end(), 0);
+    int res = -1;
+    
+    while(lo <= hi) {
+        int mid = lo + (hi - lo)/2;
         
-        for(int a: arr){
-            mx = max(mx,a);
-            sum+=a;
+        if(check(arr, k, mid)){
+            res = mid;
+            hi = mid - 1;
         }
-        
-        int low = mx , high = sum,ans =-1;
-        
-        while(low<=high){
-            int mid = (low+high)/2;
-            
-            if(check(arr,mid) <= k){
-                // ans = mid;
-                high = mid-1;
-            }else{
-                low = mid+1;
-            }
+        else {
+            lo = mid + 1;
         }
-        return low;
     }
+    
+    return res;
+}
+
 };
