@@ -1,21 +1,24 @@
 class Solution {
   public:
-    void helper(vector<vector<int>> adj,vector<int>&visited,vector<int>&ans,int node){
-        visited[node]=1;
-        ans.push_back(node);
+  
+    void DFS(vector<vector<int>>&adj,int u,vector<int>&visited,vector<int>&res){
+        if(visited[u]) return;
         
-        for(int neigh : adj[node]){
-            if(!visited[neigh]) helper(adj,visited,ans,neigh);
+        visited[u]=true;
+        res.push_back(u);
+        
+        for(auto &v : adj[u]){
+            if(!visited[v]) DFS(adj,v,visited,res);
         }
     }
-  
     vector<int> dfs(vector<vector<int>>& adj) {
-        // Code here
+        
         vector<int> visited(adj.size(),0);
-        vector<int> ans;
+        vector<int> res;
         
-        helper(adj,visited,ans,0);
+        DFS(adj,0,visited,res);
         
-        return ans;
+        return res;
+        
     }
 };
