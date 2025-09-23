@@ -5,9 +5,8 @@ class Solution {
         vector<int> v;
         
         while(!q.empty()){
-            int a = q.front();
+            v.push_back(q.front());
             q.pop();
-            v.push_back(a);
         }
         
         for(int i=v.size()-1;i>=0;i--){
