@@ -1,61 +1,41 @@
 class Solution {
   public:
-    
-string dir = "DLRU";
-int dr[4] = {1, 0, 0, -1};
-int dc[4] = {0, -1, 1, 0};
-
-// Check if a cell is valid (inside the maze and open)
-bool isValid(int r, int c, int n, vector<vector<int>>& maze) {
-    return r >= 0 && c >= 0 && r < n && c < n && maze[r][c];
-}
-
-// Function to find all valid paths
-void findPath(int r, int c, vector<vector<int>>& maze, string& path,
-                                vector<string>& res) {
-    int n = maze.size(); 
-
-    // If destination is reached, store the path
-    if (r == n - 1 && c == n - 1) {
-        res.push_back(path);
-        return;
-    }
-    
-    // Mark current cell as visited
-    maze[r][c] = 0; 
-
-    for (int i = 0; i < 4; i++) {
-        int nr = r + dr[i], nc = c + dc[i];
-        if (isValid(nr, nc, n, maze)) {
-            path.push_back(dir[i]);
-            
-            // Move to the next cell recursively
-            findPath(nr, nc, maze, path, res); 
-            
-            // Backtrack
-            path.pop_back();
+    void solve(int i, int j, vector<vector<int>> &maze, int n, vector<string> &ans, string path, vector<vector<int>> &vis) {
+        if(i == n - 1 && j == n - 1) {
+            ans.push_back(path);
+            return;
         }
-    }
-    
-    // Unmark current cell
-    maze[r][c] = 1;  
-}
-
-// Function to find all paths and return them
-vector<string> ratInMaze(vector<vector<int>>& maze) {
-    vector<string> result;
-    int n = maze.size();
-    string path = "";
-
-    if (maze[0][0] == 1 && maze[n - 1][n - 1] == 1) {
         
-        // Start from (0,0)
-        findPath(0, 0, maze, path, result);  
+        vis[i][j] = 1;
+        
+        if(i + 1 < n && !vis[i + 1][j] && maze[i + 1][j] == 1) {
+            solve(i + 1, j, maze, n, ans, path + "D", vis);
+        }
+        
+        if(j - 1 >= 0 && !vis[i][j - 1] && maze[i][j - 1] == 1) {
+            solve(i, j - 1, maze, n, ans, path + "L", vis);
+        }
+        
+        if(j + 1 < n && !vis[i][j + 1] && maze[i][j + 1] == 1) {
+            solve(i, j + 1, maze, n, ans, path + "R", vis);
+        }
+        
+        if(i - 1 >= 0 && !vis[i - 1][j] && maze[i - 1][j] == 1) {
+            solve(i - 1, j, maze, n, ans, path + "U", vis);
+        }
+        
+        vis[i][j] = 0;
     }
-
-    // Sort results lexicographically
-    sort(result.begin(), result.end());
     
-    return result;
-}
+    vector<string> ratInMaze(vector<vector<int>>& maze) {
+        int n = maze.size();
+        vector<string> ans;
+        vector<vector<int>> vis(n, vector<int>(n, 0));
+        
+        if(maze[0][0] == 1 && maze[n - 1][n - 1] == 1) {
+            solve(0, 0, maze, n, ans, "", vis);
+        }
+        
+        return ans;
+    }
 };
