@@ -1,4 +1,5 @@
 /*
+
 class Node {
 public:
     int data;
@@ -10,7 +11,9 @@ public:
         left = right = NULL;
     }
 };
+
 */
+
 class Solution {
   public:
     int findMaxSumRec(Node* root, int& res) {
