@@ -67,5 +67,4 @@ int minCostPath(vector<vector<int>>& mat) {
     // Only occurs if single cell
     return 0;
 }
-
 };
