@@ -13,7 +13,7 @@ class Solution {
             result ^= arr[i];  
         }
     }
-
+    
     return result;
 }
 };
