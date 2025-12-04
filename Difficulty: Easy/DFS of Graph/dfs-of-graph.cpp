@@ -1,24 +1,28 @@
 class Solution {
   public:
   
-    void DFS(vector<vector<int>>&adj,int u,vector<int>&visited,vector<int>&res){
+    void DFS(vector<vector<int>>&adj,int u,vector<bool>&visited,vector<int>&result){
         if(visited[u]) return;
         
+        result.push_back(u);
         visited[u]=true;
-        res.push_back(u);
         
-        for(auto &v : adj[u]){
-            if(!visited[v]) DFS(adj,v,visited,res);
+        for(int v:adj[u]){
+            if(!visited[v]){
+                DFS(adj,v,visited,result);
+            }
         }
+        
     }
+  
     vector<int> dfs(vector<vector<int>>& adj) {
+        // Code here
+        vector<bool> visited(adj.size(),false);
         
-        vector<int> visited(adj.size(),0);
-        vector<int> res;
+        vector<int> result;
         
-        DFS(adj,0,visited,res);
+        DFS(adj,0,visited,result);
         
-        return res;
-        
+        return result;
     }
 };
