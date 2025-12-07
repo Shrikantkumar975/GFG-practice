@@ -7,7 +7,7 @@ class Solution {
 	    int n = s.length();
 	    vector<int>dp(n+1);
 	    dp[0] =1;
-	    
+ 
 	    unordered_map<char,int>mp;
 	    for(int i=1; i<=n;i++){
 	        char ch = s[i-1];
