@@ -1,32 +1,35 @@
 class Solution {
   public:
-    Node* merge(Node* list1, Node* list2) {
-        Node* dummyNode = new Node(-1);
-        Node* res = dummyNode;
-        
-        while (list1 && list2) {
-            if (list1->data < list2->data) {
-                res->bottom = list1;
-                list1 = list1->bottom;
-            } else {
-                res->bottom = list2;
-                list2 = list2->bottom;
-            }
-            res = res->bottom;
+
+    Node* merge(Node* a, Node* b) {
+        if (!a) return b;
+        if (!b) return a;
+
+        Node* result;
+
+        if (a->data < b->data) {
+            result = a;
+            result->bottom = merge(a->bottom, b);
+        } else {
+            result = b;
+            result->bottom = merge(a, b->bottom);
         }
-        
-        if (list1) res->bottom = list1;
-        else res->bottom = list2;
-        
-        return dummyNode->bottom;
+
+        result->next = NULL;
+        return result;
     }
 
-    Node* flatten(Node* head) {
-        if (!head || !head->next) return head;  // ✅ fixed null check
-        
-        head->next = flatten(head->next);  // flatten rest of list
-        head = merge(head, head->next);    // merge current list with flattened next
-        
-        return head;
+    Node *flatten(Node *root) {
+        // base case
+        if (!root || !root->next)
+            return root;
+
+        // flatten the rest
+        root->next = flatten(root->next);
+
+        // merge current with flattened list
+        root = merge(root, root->next);
+
+        return root;
     }
 };
