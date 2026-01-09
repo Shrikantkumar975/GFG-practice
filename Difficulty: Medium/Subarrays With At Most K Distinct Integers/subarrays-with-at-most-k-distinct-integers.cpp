@@ -1,27 +1,27 @@
 class Solution {
-public:
-    int countAtMostK(vector<int>& arr, int k) {
+  public:
+    int countAtMostK(vector<int> &arr, int k) {
         int n = arr.size();
-        unordered_map<int, int> mp; // to store frequency of elements in current window
-
-        int i      = 0;             // left boundary of sliding window
-        int j      = 0;             // right boundary of sliding window
-        int result = 0;             // total number of valid subarrays
-
-        while (j < n) {
-            mp[arr[j]]++;           // include arr[j] in the window
-
-            while (mp.size() > k) { // if distinct elements exceed k, shrink window from left
-                mp[arr[i]]--;
-                if (mp[arr[i]] == 0) {
-                    mp.erase(arr[i]); // remove element with 0 frequency
-                }
-                i++;                  // move left pointer to right
+        unordered_map<int, int> freq;
+        
+        int left = 0;
+        long long ans = 0;
+        
+        for (int right = 0; right < n; right++) {
+            freq[arr[right]]++;
+            
+            // shrink window if distinct > k
+            while (freq.size() > k) {
+                freq[arr[left]]--;
+                if (freq[arr[left]] == 0)
+                    freq.erase(arr[left]);
+                left++;
             }
-
-            result += (j - i + 1);   // count subarrays ending at j with at most k distinct elements
-            j++;                     // expand window to the right
+            
+            // all subarrays ending at 'right'
+            ans += (right - left + 1);
         }
-        return result;
+        
+        return ans;
     }
 };
