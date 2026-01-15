@@ -1,19 +1,28 @@
 class Solution {
   public:
-    int minCandy(vector<int> &ratings,int cnt=0) {
+    int minCandy(vector<int> &arr) {
         // code here
-        int n = ratings.size();
-        vector<int> candies(n, 1);
-
-        for (int i = 1; i < n; i++) 
-            if (ratings[i] > ratings[i - 1])
-                candies[i] = candies[i - 1] + 1;
+        int n=arr.size();
         
-        for (int i = n - 1; i > 0; i--) {
-            if (ratings[i - 1] > ratings[i])
-                candies[i - 1] = max(candies[i] + 1, candies[i - 1]);
-            cnt += candies[i - 1];
+        vector<int> l2r(n,1);
+        vector<int> r2l(n,1);
+        
+        for(int i=1;i<n;i++){
+            if(arr[i]>arr[i-1])
+                l2r[i] = max(l2r[i],l2r[i-1]+1);
         }
-        return cnt + candies[n - 1];
+        
+        for(int i=n-2;i>=0;i--){
+            if(arr[i]>arr[i+1])
+                r2l[i] = max(r2l[i],r2l[i+1]+1);
+        }
+        
+        
+        int result =0;
+        for(int i=0;i<n;i++){
+            result+=max(l2r[i],r2l[i]);
+        }
+        
+        return result;
     }
 };
