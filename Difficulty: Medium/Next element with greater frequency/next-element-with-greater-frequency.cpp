@@ -1,25 +1,26 @@
 class Solution {
-public:
-    vector<int> findGreater(vector<int>& arr) {
-        int                     n = arr.size();
-        vector<int>             result(n, -1);
+  public:
+    vector<int> nextFreqGreater(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> ans(n, -1);
         unordered_map<int, int> freq;
+        stack<int> st;
 
+        // Count frequency of each element
         for (int x : arr) {
             freq[x]++;
         }
 
-        stack<int> st;                                           // will hold indices
-
-        // traverse from left to right
+        // Traverse array
         for (int i = 0; i < n; i++) {
-            // resolve any stack tops whose freq < current freq
+            // If current element has higher frequency
             while (!st.empty() && freq[arr[i]] > freq[arr[st.top()]]) {
-                result[st.top()] = arr[i];
+                ans[st.top()] = arr[i];
                 st.pop();
             }
             st.push(i);
         }
-        return result;
+
+        return ans;
     }
 };
