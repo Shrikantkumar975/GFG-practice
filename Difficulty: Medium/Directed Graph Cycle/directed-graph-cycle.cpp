@@ -1,41 +1,34 @@
 class Solution {
   public:
-    bool dfs(vector<vector<int>>&adj,vector<bool>&visited,int u,vector<bool>&inRecursion){
-        visited[u]=true;
-        inRecursion[u]=true;
-        
-        for(int v: adj[u]){
-            if(!visited[v] && dfs(adj,visited,v,inRecursion)){
-                return true;
-            }
-            else if(inRecursion[v]){
-                return true;
-            }
-        }
-        inRecursion[u]=false;
-        return false;
-    }
-  
-  
     bool isCyclic(int V, vector<vector<int>> &edges) {
         // code here
         vector<vector<int>> adj(V);
+        vector<int> indegree(V,0);
         
-        for(auto m: edges){
-            adj[m[0]].push_back(m[1]);
+        for(auto &node : edges){
+            adj[node[0]].push_back(node[1]);
+            indegree[node[1]]++;
         }
         
-        vector<bool> visited(V,false);
-        vector<bool> inRecursion(V,false);
-        
+        queue<int> q;
+        int count=0;
         for(int i=0;i<V;i++){
-            if(!visited[i]){
-                if(dfs(adj,visited,i,inRecursion)){
-                    return true;
-                }
+            if(indegree[i]==0) q.push(i);
+        }
+        
+        while(!q.empty()){
+            int u=q.front();
+            q.pop();
+            count++;
+            
+            for(int &v: adj[u]){
+                indegree[v]--;
+                
+                if(indegree[v]==0) q.push(v);
             }
         }
         
-        return false;
+        return count!=V;
+        
     }
 };
