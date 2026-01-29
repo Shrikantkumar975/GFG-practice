@@ -1,41 +1,52 @@
 class Solution {
   public:
-    using T = pair<int,int>;
-    int spanningTree(int V, vector<vector<int>>& edges) {
-        
-        vector<vector<pair<int,int>>> adj(V);
-        
-        for(auto &edge: edges){
-            adj[edge[0]].push_back({edge[1],edge[2]});
-            adj[edge[1]].push_back({edge[0],edge[2]});
+    vector<int> parent, rank;
+
+    int find(int v) {
+        if (parent[v] == v)
+            return v;
+        return parent[v] = find(parent[v]);
+    }
+
+    void Union(int u, int v) {
+        u = find(u);
+        v = find(v);
+
+        if (u == v) return;
+
+        if (rank[u] < rank[v])
+            parent[u] = v;
+        else if (rank[v] < rank[u])
+            parent[v] = u;
+        else {
+            parent[v] = u;
+            rank[u]++;
         }
-        // code here
-        vector<bool> visited(V,false);
-        
-        priority_queue<T,vector<T>,greater<T>> pq;
-        pq.push({0,0});
-        
-        int ans=0;
-        
-        while(!pq.empty()){
-            auto [d,node] = pq.top();
-            pq.pop();
-            
-            if(visited[node]) continue;
-            
-            visited[node]=true;
-            ans+=d;
-            
-            for(auto [v,dist]: adj[node]){
-                // int v = neigh[0];
-                // int dist = neigh[1];
-                
-                if(!visited[v]){
-                    pq.push({dist,v});
-                }
+    }
+
+    int spanningTree(int V, vector<vector<int>>& edges) {
+        parent.resize(V);
+        rank.assign(V, 0);
+
+        for (int i = 0; i < V; i++)
+            parent[i] = i;
+
+        // Sort edges by weight
+        sort(edges.begin(), edges.end(),
+             [](vector<int>& a, vector<int>& b) {
+                 return a[2] < b[2];
+             });
+
+        int mstWeight = 0;
+
+        for (auto &e : edges) {
+            int u = e[0], v = e[1], w = e[2];
+            if (find(u) != find(v)) {
+                Union(u, v);
+                mstWeight += w;
             }
         }
-        
-        return ans;
+
+        return mstWeight;
     }
 };
