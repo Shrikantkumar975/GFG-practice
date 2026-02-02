@@ -8,7 +8,7 @@ class Solution {
         vector<int> distance(V,INF);
         distance[src] = 0;
         
-        for(int i=0;i<V;i++){
+        for(int i=0;i<V-1;i++){
             for(auto &edge: edges){
                 int u=edge[0];
                 int v=edge[1];
