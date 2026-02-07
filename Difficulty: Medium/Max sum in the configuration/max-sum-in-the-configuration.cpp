@@ -14,7 +14,7 @@ class Solution {
         int res = currVal;
 
         for (int i = 1; i < n; i++) {
-            currVal = currVal + arrSum - n * arr[n - i];
+            currVal = currVal + arrSum - (n * arr[n - i]);
             res = max(res, currVal);
         }
 
