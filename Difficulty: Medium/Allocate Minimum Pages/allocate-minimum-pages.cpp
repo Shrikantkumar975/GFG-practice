@@ -1,53 +1,40 @@
 class Solution {
   public:
-    bool check(vector<int> &arr, int k, int pageLimit) {
-    
-    // starting from the first student
-    int cnt = 1;
-    int pageSum = 0;
-    for(int i = 0; i < arr.size(); i++) {
+    int check(vector<int> &arr,int mid){
+        int curr=1;
+        int currSum=0;
         
-        // if adding the current book exceeds the page 
-        // limit, assign the book to the next student
-        if(pageSum + arr[i] > pageLimit) {
-            cnt++;
-            pageSum = arr[i];
+        for(int a : arr){
+            if(currSum+a>mid){
+                curr++;
+                currSum=a;
+            }else{
+                currSum+=a;
+            }
         }
-        else {
-            pageSum += arr[i];
-        }
+        
+        return curr;
     }
-    
-    // if books can assigned to less than k students then
-    // it can be assigned to exactly k students as well
-    return (cnt <= k);
-}
-
-int findPages(vector<int> &arr, int k) {
-    
-    // if number of students are more than total books
-    // then allocation is not possible
-    if(k > arr.size())
-        return -1;
+  
+    int findPages(vector<int> &arr, int k) {
+        if(k>arr.size()) return -1;
+        // code here
+        int low = *max_element(arr.begin(),arr.end());
+        int high = accumulate(arr.begin(),arr.end(),0);
         
-    // search space for Binary Search
-    int lo = *max_element(arr.begin(), arr.end());
-    int hi = accumulate(arr.begin(), arr.end(), 0);
-    int res = -1;
-    
-    while(lo <= hi) {
-        int mid = lo + (hi - lo)/2;
+        int ans= -1;
         
-        if(check(arr, k, mid)){
-            res = mid;
-            hi = mid - 1;
+        while(low<=high){
+            int mid = (low + high)/2;
+            
+            if(check(arr,mid)<=k){
+                ans = mid;
+                high = mid-1;
+            }
+            else low= mid+1;
         }
-        else {
-            lo = mid + 1;
-        }
+        
+        return ans;
+        
     }
-    
-    return res;
-}
-
 };
