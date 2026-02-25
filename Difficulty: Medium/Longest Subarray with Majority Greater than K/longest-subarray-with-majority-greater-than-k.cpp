@@ -1,20 +1,36 @@
 class Solution {
   public:
     int longestSubarray(vector<int> &arr, int k) {
-        // CodeGenius
-        unordered_map<int,int>mp;
-        mp[0]=-1;
-        int prefixsum=0,maxlen=0;
-        for(int i=0;i<arr.size();i++){
-            prefixsum+=(arr[i]>k)?1:-1;
-            if(prefixsum>0) maxlen=i+1;
+        
+        unordered_map<int, int> mp;
+        int prefixSum = 0;
+        int maxLen = 0;
+        
+        for(int i = 0; i < arr.size(); i++) {
             
-            if(mp.count(prefixsum-1)){
-                maxlen=max(maxlen,i-mp[prefixsum-1]);
+            // Convert to +1 and -1
+            if(arr[i] > k)
+                prefixSum += 1;
+            else
+                prefixSum -= 1;
+            
+            // If sum > 0 → whole subarray valid
+            if(prefixSum > 0)
+                maxLen = i + 1;
+            
+            else {
+                // Check if (prefixSum - 1) seen before
+                if(mp.find(prefixSum - 1) != mp.end()) {
+                    maxLen = max(maxLen, i - mp[prefixSum - 1]);
+                }
             }
             
-            if(!mp.count(prefixsum)) mp[prefixsum]=i;
+            // Store first occurrence only
+            if(mp.find(prefixSum) == mp.end()) {
+                mp[prefixSum] = i;
+            }
         }
-        return maxlen;
+        
+        return maxLen;
     }
 };
