@@ -9,8 +9,8 @@ class Solution {
         int left=0;
         int right=height.size()-1;
         
-        while(left<right){
-            if(height[left]<=height[right]){
+        while(left<=right){ //
+            if(height[left]<=height[right]){ //
                 if(height[left] >= maxL){
                     maxL = height[left];
                 }
