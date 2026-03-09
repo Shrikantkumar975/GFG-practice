@@ -1,35 +1,22 @@
 class Solution {
-  public:
-    string largestSwap(string &s) {
-        // code here
-        char maxDigit = '0';
-    int maxIndx = -1;
-    int l = -1, r = -1;
+public:
+    string largestSwap(string s) {
+        int n = s.size();
+        vector<int> last(10, -1);
 
-    // Traverse from right to left
-    for (int i = s.size() - 1; i >= 0; i--)
-    {
-        // Update maxDigit if current digit is larger
-        if (s[i] > maxDigit)
-        {
-            maxDigit = s[i];
-            maxIndx = i;
+        // store last occurrence of each digit
+        for(int i = 0; i < n; i++)
+            last[s[i] - '0'] = i;
+
+        for(int i = 0; i < n; i++) {
+            for(int d = 9; d > s[i]-'0'; d--) {
+                if(last[d] > i) {
+                    swap(s[i], s[last[d]]);
+                    return s;
+                }
+            }
         }
-        
-        // Found a smaller digit before a larger one
-        else if (s[i] < maxDigit)
-        {
-            l = i;
-            r = maxIndx;
-        }
-    }
 
-    // If no swap needed, return original
-    if (l == -1) return s;
-
-    // Perform swap
-    swap(s[l], s[r]);
-    
-    return s;
+        return s;
     }
 };
