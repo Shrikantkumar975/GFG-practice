@@ -1,40 +1,42 @@
 class Solution {
   public:
     int check(vector<int> &arr,int mid){
-        int curr=1;
-        int currSum=0;
+        int pages=arr[0];
+        int count=1;
         
-        for(int a : arr){
-            if(currSum+a>mid){
-                curr++;
-                currSum=a;
+        for(int i=1;i<arr.size();i++){
+            if(pages+arr[i]<=mid){
+                pages+=arr[i];
             }else{
-                currSum+=a;
+                count++;
+                pages=arr[i];
             }
         }
         
-        return curr;
+        return count;
     }
   
     int findPages(vector<int> &arr, int k) {
-        if(k>arr.size()) return -1;
         // code here
-        int low = *max_element(arr.begin(),arr.end());
-        int high = accumulate(arr.begin(),arr.end(),0);
+        int  n = arr.size();
         
-        int ans= -1;
+        if(k>n) return -1;
+        
+        int ans =-1;
+        
+        int high = accumulate(arr.begin(),arr.end(),0);
+        int low = *max_element(arr.begin(),arr.end());
         
         while(low<=high){
-            int mid = (low + high)/2;
-            
+            int mid = (high+low)/2;
             if(check(arr,mid)<=k){
                 ans = mid;
                 high = mid-1;
+            }else{
+                low = mid +1;
             }
-            else low= mid+1;
         }
         
         return ans;
-        
     }
 };
