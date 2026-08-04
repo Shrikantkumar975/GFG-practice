@@ -3,25 +3,19 @@ class Solution {
     int countPairs(vector<int>& arr, int k) {
         // code here
         sort(arr.begin(),arr.end());
-        int ans=0;
         
-        for(int i=0;i<arr.size()-1;i++){
-            int low = i+1;
-            int high = arr.size()-1;
-            int curr=i;
+        int ans=0;
+        int j=0;
+        
+        for(int i=0;i<arr.size();i++){
+            if (j < i + 1)
+                j = i + 1;
             
-            while(low<=high){
-                int mid = (low+high)/2;
-                
-                if(arr[mid]-arr[i] < k){
-                    curr=mid;
-                    low=mid+1;
-                }else{
-                    high=mid-1;
-                }
+            while(j<arr.size() && arr[j]-arr[i]<k){
+                j++;
             }
             
-            ans+=curr-i;
+            ans+=j-i-1;
         }
         
         return ans;
