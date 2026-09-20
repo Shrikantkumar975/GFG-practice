@@ -1,59 +1,69 @@
 class Solution {
 public:
     int largestSubsquare(vector<vector<char>> &mat) {
+
         int n = mat.size();
         int m = mat[0].size();
 
-        // first  = consecutive X's towards left
-        // second = consecutive X's towards up
-        vector<vector<pair<int, int>>> dp(
-            n, vector<pair<int, int>>(m, {0, 0})
+        int maxi = 0;
+
+        // first  = X's towards left
+        // second = X's towards up
+        vector<vector<pair<int,int>>> dp(
+            n, vector<pair<int,int>>(m, {0,0})
         );
 
-        // Build left and up counts
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+        // Build DP
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
 
-                if (mat[i][j] == 'X') {
+                if(mat[i][j] == 'X') {
+
+                    // Current cell itself
+                    dp[i][j].first = 1;
+                    dp[i][j].second = 1;
 
                     // Left
-                    dp[i][j].first = 1;
-                    if (j > 0)
-                        dp[i][j].first += dp[i][j - 1].first;
+                    if(j > 0 && mat[i][j-1] == 'X') {
+                        dp[i][j].first += dp[i][j-1].first;
+                    }
 
                     // Up
-                    dp[i][j].second = 1;
-                    if (i > 0)
-                        dp[i][j].second += dp[i - 1][j].second;
+                    if(i > 0 && mat[i-1][j] == 'X') {
+                        dp[i][j].second += dp[i-1][j].second;
+                    }
                 }
             }
         }
 
-        int ans = 0;
+        // Check every cell as bottom-right corner
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
 
-        // Treat (i,j) as bottom-right corner
-        for (int i = n - 1; i >= 0; i--) {
-            for (int j = m - 1; j >= 0; j--) {
+                if(mat[i][j] != 'X')
+                    continue;
 
-                // Possible side length cannot exceed
-                // number of X's going left or up
-                int len = min(dp[i][j].first, dp[i][j].second);
+                // Bottom and right borders are already known
+                int len = min(dp[i][j].first,
+                              dp[i][j].second);
 
-                while (len > ans) {
+                while(len > maxi) {
 
-                    int topRow = i - len + 1;
-                    int leftCol = j - len + 1;
+                    int top = i - len + 1;
+                    int left = j - len + 1;
 
-                    if (topRow >= 0 && leftCol >= 0) {
+                    if(top >= 0 && left >= 0) {
 
                         // Top border
-                        int topX = dp[topRow][j].first;
+                        bool topBorder =
+                            dp[top][j].first >= len;
 
                         // Left border
-                        int leftX = dp[i][leftCol].second;
+                        bool leftBorder =
+                            dp[i][left].second >= len;
 
-                        if (topX >= len && leftX >= len) {
-                            ans = len;
+                        if(topBorder && leftBorder) {
+                            maxi = len;
                             break;
                         }
                     }
@@ -63,6 +73,6 @@ public:
             }
         }
 
-        return ans;
+        return maxi;
     }
 };
